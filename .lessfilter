@@ -1,20 +1,25 @@
 #!/bin/sh
+EXTENSION=
 case "$1" in
-    *.awk|*.groff|*.java|*.js|*.m4|*.php|*.pl|*.pm|*.pod|*.sh|\
-    *.ad[asb]|*.asm|*.inc|*.[ch]|*.[ch]pp|*.[ch]xx|*.cc|*.hh|\
-    *.lsp|*.l|*.pas|*.p|*.xml|*.xps|*.xsl|*.axp|*.ppd|*.pov|\
-    *.diff|*.patch|*.py|*.rb|*.sql|*.ebuild|*.eclass)
-        pygmentize -f terminal -O "bg=light" "$1";;
-
-    .bashrc|.bash_aliases|.bash_environment)
-        pygmentize -f terminal -O "bg=light" -l sh "$1";;
-
+    .bashrc|.bash_aliases|.bash_environment|.lessfilter)
+        # shellcheck disable=SC2209
+        EXTENSION=sh;;
+    *.service)
+        EXTENSION=ini;;
     *)
-        if grep -q "#\!/bin/bash" "$1" 2> /dev/null; then
-            pygmentize -f terminal -O "bg=light" -l sh "$1"
-        else
-            exit 1
+        if grep -q '#\!.*sh' "$1" 2> /dev/null; then
+            # shellcheck disable=SC2209
+            EXTENSION=sh
+        elif grep -q '#\!.*python' "$1" 2> /dev/null; then
+            EXTENSION=py
         fi
 esac
+
+LEXER_OPTION=()
+if test -n "$EXTENSION"; then
+    LEXER_OPTION=(-l "$EXTENSION")
+fi
+
+pygmentize -f terminal -O "bg=light" "${LEXER_OPTION[@]}" "$1"
 
 exit 0
