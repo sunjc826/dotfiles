@@ -1,0 +1,13 @@
+$if gdb
+    # gdb's TUI mode doesn't work well with vi mode
+    set editing-mode emacs
+$else
+    set editing-mode vi
+$endif
+# see https://stackoverflow.com/questions/44534678/how-to-change-cursor-shape-depending-on-vi-mode-in-bash
+set show-mode-in-prompt on
+set emacs-mode-string "\1\e[2 q\2"
+set vi-cmd-mode-string "\1\e[2 q\2"
+set vi-ins-mode-string "\1\e[6 q\2"
+set keymap vi-command
+"diw": "bde"
