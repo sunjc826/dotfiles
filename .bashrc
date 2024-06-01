@@ -1,10 +1,17 @@
 # https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
-pathadd() {
+append_path() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
         PATH="${PATH:+"$PATH:"}$1"
     fi
 }
 
+prepend_path() {
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="$1${PATH:+":$PATH"}"
+    fi
+}
+
+# Useful 'stronger' sudo 
 psudo() {
     sudo -E LD_LIBRARY_PATH="$LD_LIBRARY_PATH" "$@"
 }
@@ -23,7 +30,7 @@ export LESSOPEN='|~/.lessfilter %s'
 # check for completions for shopt using `compgen -A shopt`
 shopt -s globstar
 
-pathadd '.'
+prepend_path .
 
 PS0='\[\e[2 q\]' # reset cursor (we need this or it would mess up program cursors especially vim)
 PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
