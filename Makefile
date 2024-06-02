@@ -1,8 +1,9 @@
 SHELL := /bin/bash
 SCRIPT_FILES := .bashrc .lessfilter
-FILES := $(SCRIPT_FILES) .gdbinit .inputrc .shellcheckrc .ssh/config .vimrc
+SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc
+FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc
 # Files on a remote machine; ssh config should be unnecessary 
-REMOTE_FILES := $(filter-out .ssh/config,$(FILES))
+REMOTE_FILES := $(filter-out .config/Code/User/settings.json .ssh/config,$(FILES))
 FILE_FLAGS := $(patsubst %,%_install_flag,$(FILES))
 
 nothing:
@@ -21,17 +22,20 @@ $(FILE_FLAGS): %_install_flag : | %
 $(patsubst %,%_install_flag,$(SCRIPT_FILES)):
 	. install.sh && append_sh_source_file '$|'
 	touch $@
+$(patsubst %,%_install_flag,$(SYMLINK_FILES)):
+	. install.sh && symlink_file '$|'
+	touch $@
 .gdbinit_install_flag:
 	. install.sh && gdbinit_install
 	touch $@
 .inputrc_install_flag:
 	. install.sh && append_source_file $$include '$|'
 	touch $@
-.shellcheckrc_install_flag:
-	. install.sh && ln -s '$(realpath $|)' "$$HOME"/'$|'
-	touch $@
 .ssh/config_install_flag:
 	. install.sh && append_source_file Include '$|'
+	touch $@
+.tmux.conf_install_flag:
+	. install.sh && append_source_file source '$|'
 	touch $@
 .vimrc_install_flag:
 	. install.sh && append_source_file so '$|'

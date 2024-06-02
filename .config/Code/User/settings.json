@@ -1,0 +1,97 @@
+{
+  "files.autoSave": "onFocusChange",
+  "editor.tabSize": 4,
+  "editor.linkedEditing": true,
+  "editor.detectIndentation": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "gitlens.blame.avatars": false,
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.accessibilitySupport": "off",
+  "editor.minimap.enabled": false,
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "gitlens.codeLens.scopes": ["document"],
+    "editor.wordWrap": "on"
+  },
+  "[jsonc]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "gitlens.codeLens.scopes": ["document"],
+    "editor.wordWrap": "on"
+  },
+  "[markdown]": {
+    "editor.tabSize": 4,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    },
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
+  },
+  "[plaintext]": {
+    "editor.wordWrap": "on"
+  },
+  "[tex]": {
+    "editor.wordWrap": "on",
+    "editor.detectIndentation": false
+  },
+  "[latex]": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "python.formatting.autopep8Args": ["--indent-size", "4"],
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "markdown-preview-enhanced.previewTheme": "atom-dark.css",
+  "C_Cpp.formatting": "clangFormat",
+  "C_Cpp.vcFormat.space.pointerReferenceAlignment": "right",
+  "C_Cpp.vcFormat.indent.preprocessor": "leftmostColumn",
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "keep",
+    "gitlens.codeLens.scopes": ["document"],
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
+  },
+  "[makefile]": {
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false
+  },
+  "[automake]": {
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false
+  },
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.arguments": ["--enable-config"],
+  "window.zoomLevel": 2,
+  "workbench.colorTheme": "Default Dark+",
+  "diffEditor.ignoreTrimWhitespace": false
+}

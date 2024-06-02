@@ -8,9 +8,27 @@ append_source_file() {
     source_keyword=$1
     local src_filepath # relative
     src_filepath=$2
-    local dest_filepath # relative to $HOME, can be a directory as well
+    local dest_filepath # relative to $HOME
     dest_filepath=${3:-${src_filepath}}
     echo "$source_keyword"' '"${SCRIPT_DIR}"/"$src_filepath" >> "$HOME"/"$dest_filepath"
+}
+
+symlink_file() {
+    local src_filepath # relative
+    src_filepath=$1
+    local dest_filepath # relative to $HOME
+    dest_filepath=${2:-${src_filepath}}
+    mkdir -p "$(dirname "$HOME"/"$dest_filepath")"
+    ln -s "${SCRIPT_DIR}"/"$src_filepath" "$HOME"/"$dest_filepath"
+}
+
+copy_file() {
+    local src_filepath # relative
+    src_filepath=$1
+    local dest_filepath # relative to $HOME
+    dest_filepath=${2:-${src_filepath}}
+    mkdir -p "$(dirname "$HOME"/"$dest_filepath")"
+    cp "${SCRIPT_DIR}"/"$src_filepath" "$HOME"/"$dest_filepath"
 }
 
 append_sh_source_file() {
