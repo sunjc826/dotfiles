@@ -29,7 +29,7 @@ $(patsubst %,%_install_flag,$(SYMLINK_FILES)):
 	. install.sh && gdbinit_install
 	touch $@
 .inputrc_install_flag:
-	. install.sh && append_source_file $$include '$|'
+	. install.sh && append_source_file '$$include' '$|'
 	touch $@
 .ssh/config_install_flag:
 	. install.sh && append_source_file Include '$|'
