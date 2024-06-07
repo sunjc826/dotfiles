@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Assumes that the bear utility is installed. Useful for substitution into makefiles, e.g. make CC=bear_cc ...
+SCRIPT_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
+bear --append --output "$SCRIPT_DIR"/compile_commands.json -- gcc "$@"
+

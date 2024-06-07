@@ -30,6 +30,7 @@ export LESSOPEN='|~/.lessfilter %s'
 # check for completions for shopt using `compgen -A shopt`
 shopt -s globstar
 
+prepend_path "$HOME"/bin
 prepend_path .
 
 PS0='\[\e[2 q\]' # reset cursor (we need this or it would mess up program cursors especially vim)

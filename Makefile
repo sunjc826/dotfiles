@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 SCRIPT_FILES := .bashrc .lessfilter
-SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc
+SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc bin/bear_cc
 FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc
 # Files on a remote machine; ssh config should be unnecessary 
 REMOTE_FILES := $(filter-out .config/Code/User/settings.json .ssh/config,$(FILES))
