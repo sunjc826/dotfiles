@@ -120,3 +120,13 @@ then
         bind -x '"\C-r": fzf_history_search'
     fi
 fi
+
+function bu_activate()
+{
+    if [[ ! -e ~/Documents/shell-utils ]]
+    then
+        echo shell-utils not found >&2
+        return 1
+    fi
+    source ~/Documents/shell-utils/bu_entrypoint.sh
+}
