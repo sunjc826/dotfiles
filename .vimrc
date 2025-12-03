@@ -6,6 +6,7 @@ filetype plugin indent on
 " Use actual tab chars in Makefiles.
 autocmd FileType make set noexpandtab
 
+set backspace=indent,eol,start
 set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab

@@ -1,11 +1,23 @@
-#!/bin/sh
+#!/bin/bash
+SCRIPT_DIR=$(dirname -- "${BASH_SOURCE[0]}")
 EXTENSION=
+CUSTOM_LEXER=
+CUSTOM_FORMATTER=
 case "$1" in
     .bashrc|.bash_aliases|.bash_environment|.lessfilter)
         # shellcheck disable=SC2209
         EXTENSION=sh;;
     *.service)
         EXTENSION=ini;;
+    *.log)
+        return 1
+        ;;
+    *.csv)
+        # TODO: Implement this
+        CUSTOM_LEXER=$SCRIPT_DIR/csv.py:CsvLexer
+        CUSTOM_FORMATTER=$SCRIPT_DIR/csv.py:CsvFormatter
+        return 1
+        ;;
     *)
         if grep -q '#\!.*sh' "$1" 2> /dev/null; then
             # shellcheck disable=SC2209
@@ -18,8 +30,12 @@ esac
 LEXER_OPTION=()
 if test -n "$EXTENSION"; then
     LEXER_OPTION=(-l "$EXTENSION")
+elif test -n "$CUSTOM_LEXER"; then
+    LEXER_OPTION=(-l "$CUSTOM_LEXER")
+    if test -n "$CUSTOM_FORMATTER"; then
+        LEXER_OPTION+=(-f "$CUSTOM_FORMATTER")
+    fi
+    LEXER_OPTION+=(-x)
 fi
 
 pygmentize -f terminal -O "bg=light" "${LEXER_OPTION[@]}" "$1"
-
-exit 0

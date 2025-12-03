@@ -93,5 +93,9 @@
   "clangd.arguments": ["--enable-config"],
   "window.zoomLevel": 2,
   "workbench.colorTheme": "Default Dark+",
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "files.enableTrash": true,
+  "explorer.confirmDelete": true,
+  "python.analysis.inlayHints.callArgumentNames": "all",
+  "python.analysis.inlayHints.functionReturnTypes": true,
 }

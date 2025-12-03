@@ -44,11 +44,13 @@ append_sh_source_file() {
 }
 
 gdbinit_install() {
+    local src_filepath
+    src_filepath=$1
     local gdbinit
     gdbinit=.config/gdb/gdbinit
     if test -e "$HOME"/.gdbinit; then
         gdbinit=.gdbinit
     fi
     mkdir -p "$(dirname "$HOME"/"$gdbinit")"
-    append_source_file source .gdbinit "$gdbinit"
+    append_source_file source "$src_filepath" "$gdbinit"
 }
