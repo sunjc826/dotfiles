@@ -4,6 +4,7 @@ SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc bin/bear_cc .clan
 FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc
 # Files on a remote machine; ssh config should be unnecessary 
 REMOTE_FILES := $(filter-out .config/Code/User/settings.json .ssh/config,$(FILES))
+WSL_FILES := $(filter-out .config/Code/User/settings.json,$(FILES))
 FILE_FLAGS := $(patsubst %,%_install_flag,$(FILES))
 
 nothing:
@@ -16,6 +17,10 @@ clean_install:
 
 .PHONY: install_local
 install_local: $(FILE_FLAGS) run_once_flag
+
+.PHONY: install_wsl
+install_wsl: $(patsubst %,%_install_flag,$(WSL_FILES)) run_once_flag
+
 .PHONY: install_remote
 install_remote: $(patsubst %,%_install_flag,$(REMOTE_FILES)) run_once_flag
 
