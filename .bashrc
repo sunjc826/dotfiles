@@ -40,10 +40,10 @@ PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\
 export EDITOR=vim
 
 RED="\[\033[0;31m\]"
-YELLOW="\[033[1;33m\]"
-GREEN="\[033[1;32m\]"
-BLUE="\[033[1;34m\]"
-CYAN="\[033[1;36m\]"
+YELLOW="\[\033[1;33m\]"
+GREEN="\[\033[1;32m\]"
+BLUE="\[\033[1;34m\]"
+CYAN="\[\033[1;36m\]"
 LIGHT_GREEN="\[\033[1;32m\]"
 WHITE="\[\033[1;37m\]"
 LIGHT_GRAY="\[\033[0;37m\]"
@@ -54,7 +54,7 @@ function set_exit_code()
     EXIT_CODE=""
     if [[ $RETVAL != 0 ]]
     then
-        EXIT_CODE="${RED}${EXIT_CODE}${COLOR_NONE}"
+        EXIT_CODE="${RED}Err(${RETVAL}) ${COLOR_NONE}"
     fi
 }
 
@@ -80,6 +80,8 @@ function set_virtualenv()
 
 function set_bash_prompt()
 {
+    RETVAL=$?
+
     history -a
     set_exit_code
     set_virtualenv
@@ -91,17 +93,17 @@ function set_bash_prompt()
         git_branch=" ($git_branch${remote_git_branch:+->}${remote_git_branch})"
     fi
 
-    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${CYAN}\u${COLOR_NONE}@${GREEN}\h${COLOR_NONE}:\w${git_branch}\n${YELLOW}\\\$${COLOR_NONE}"
+    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${CYAN}\u${COLOR_NONE}@${GREEN}\h${COLOR_NONE}:\w${git_branch}\n${YELLOW}\\\$ ${COLOR_NONE}"
 }
 export PROMPT_COMMAND=set_bash_prompt
 
 function fzf_history_search()
 {
     local selected_command
-    selected_command=$(awk '/^#/{if (cmd) {print cmd; cmd=""} next} {if (cmd) cmd = cmd " " $0; else cmd = $0} END {if (cmd) print cmd}' ~/.bash_history \
+    selected_command=$(awk '!/^ *#/{print $0}' ~/.bash_history \
         | tac \
-        | awk '!a[$0]++'
-        | tail -n 10000
+        | awk '!a[$0]++' \
+        | tail -n 10000 \
         | fzf --exact +s --sync -q "$READLINE_LINE"
     )
     if [[ -n "$selected_command" ]]
