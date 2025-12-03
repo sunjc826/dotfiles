@@ -49,7 +49,7 @@ WHITE="\[\033[1;37m\]"
 LIGHT_GRAY="\[\033[0;37m\]"
 COLOR_NONE="\[\e[0m\]"
 
-function set_exit_code()
+function dotfiles_set_exit_code()
 {
     EXIT_CODE=""
     if [[ $RETVAL != 0 ]]
@@ -58,7 +58,7 @@ function set_exit_code()
     fi
 }
 
-function set_virtualenv()
+function dotfiles_set_virtualenv()
 {
     if [[ -n "$VIRTUAL_ENV_PROMPT" ]]
     then
@@ -78,13 +78,13 @@ function set_virtualenv()
     fi
 }
 
-function set_bash_prompt()
+function dotfiles_set_bash_prompt()
 {
     RETVAL=$?
 
     history -a
-    set_exit_code
-    set_virtualenv
+    dotfiles_set_exit_code
+    dotfiles_set_virtualenv
 
     local git_branch=$(git rev-parse --abbrev-ref @ 2>/dev/null)
     local remote_git_branch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
@@ -95,7 +95,7 @@ function set_bash_prompt()
 
     PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${CYAN}\u${COLOR_NONE}@${GREEN}\h${COLOR_NONE}:\w${git_branch}\n${YELLOW}\\\$ ${COLOR_NONE}"
 }
-export PROMPT_COMMAND=set_bash_prompt
+export PROMPT_COMMAND=dotfiles_set_bash_prompt
 
 function fzf_history_search()
 {
@@ -121,12 +121,36 @@ then
     fi
 fi
 
-function bu_activate()
+function dotfiles_bind_tmux_on_off()
+{
+    if bu_tmux_is_active
+    then
+        if [[ "$(tmux display-message -p '#{session_name}')" = mysession ]]
+        then
+            tmux kill-session
+        fi 
+    else
+        tmux new-session -A -s mysession
+    fi
+}
+
+function dotfiles_bu_pre_init_entrypoint()
+{
+    bu_preinit_register_user_defined_key_binding '\et' dotfiles_bind_tmux_on_off
+}
+
+function dotfiles_bu_activate()
 {
     if [[ ! -e ~/Documents/shell-utils ]]
     then
         echo shell-utils not found >&2
         return 1
     fi
+    BU_USER_DEFINED_STATIC_PRE_INIT_ENTRYPOINT_CALLBACKS+=(
+        dotfiles_bu_pre_init_entrypoint
+    )
     source ~/Documents/shell-utils/bu_entrypoint.sh
 }
+
+
+cd "$HOME"
