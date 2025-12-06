@@ -184,7 +184,7 @@ function dotfiles_bu_activate()
         echo shell-utils not found >&2
         return 1
     fi
-    BU_USER_DEFINED_STATIC_PRE_INIT_ENTRYPOINT_CALLBACKS+=(
+    BU_USER_DEFINED_STATIC_PRE_INIT_ENTRYPOINT_CALLBACKS=(
         dotfiles_bu_pre_init_entrypoint
     )
     source ~/Documents/shell-utils/bu_entrypoint.sh
