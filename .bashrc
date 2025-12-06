@@ -134,9 +134,47 @@ function dotfiles_bind_tmux_on_off()
     fi
 }
 
+function dotfiles_autocomplete_completion_func_code()
+{
+    local completion_command=$1
+    local cur_word=$2
+    local prev_word=$3
+
+    case "$prev_word" in
+    -a|--add|-g|--goto)
+        compopt -o nospace
+        COMPREPLY=($(compgen -f "$cur_word"))
+        ;;
+    *)
+        COMPREPLY=(
+            -d --diff
+            -m --merge
+            -a --add
+            -g --goto
+            -n --new-window
+            -r --reuse-window
+            -w --wait
+            -h --help
+            --list-extensions
+            --show-versions
+            --category
+            --install-extension
+            --uninstall-extension
+            --update-extensions
+            -v --version
+            --verbose
+            -s --status
+        )
+        ;;
+    esac
+    COMPREPLY=($(compgen -W "${COMPREPLY[*]}" -- "$cur_word"))
+}
+
 function dotfiles_bu_pre_init_entrypoint()
 {
     bu_preinit_register_user_defined_key_binding '\et' dotfiles_bind_tmux_on_off
+
+    bu_preinit_register_user_defined_completion_func code dotfiles_autocomplete_completion_func_code
 }
 
 function dotfiles_bu_activate()
@@ -151,6 +189,5 @@ function dotfiles_bu_activate()
     )
     source ~/Documents/shell-utils/bu_entrypoint.sh
 }
-
 
 cd "$HOME"
