@@ -123,7 +123,7 @@ fi
 
 function dotfiles_bind_tmux_on_off()
 {
-    if bu_tmux_is_active
+    if bu_env_is_in_tmux
     then
         if [[ "$(tmux display-message -p '#{session_name}')" = mysession ]]
         then
