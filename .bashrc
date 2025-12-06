@@ -191,3 +191,4 @@ function dotfiles_bu_activate()
 }
 
 cd "$HOME"
+dotfiles_bu_activate
