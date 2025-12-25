@@ -1,3 +1,5 @@
+DOTFILES_DIRNAME=$(realpath -- "$(dirname "${BASH_SOURCE}")")
+
 # https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
 append_path() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
@@ -175,13 +177,6 @@ function dotfiles_autocomplete_completion_func_code()
     COMPREPLY=($(compgen -W "${COMPREPLY[*]}" -- "$cur_word"))
 }
 
-function dotfiles_bu_pre_init_entrypoint()
-{
-    bu_preinit_register_user_defined_key_binding '\et' dotfiles_bind_tmux_on_off
-
-    bu_preinit_register_user_defined_completion_func code dotfiles_autocomplete_completion_func_code
-}
-
 function dotfiles_bu_activate()
 {
     if [[ ! -e ~/Documents/shell-utils ]]
@@ -189,9 +184,11 @@ function dotfiles_bu_activate()
         echo shell-utils not found >&2
         return 1
     fi
-    BU_USER_DEFINED_STATIC_PRE_INIT_ENTRYPOINT_CALLBACKS=(
-        dotfiles_bu_pre_init_entrypoint
-    )
+    
+    if [[ "$BU_MODULE_PATH" != */dotfiles_bu_module.sh* ]]
+    then
+        BU_MODULE_PATH+=:$DOTFILES_DIRNAME/dotfiles_bu_module.sh
+    fi
     source ~/Documents/shell-utils/bu_entrypoint.sh
 }
 
