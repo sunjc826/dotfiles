@@ -39,50 +39,53 @@ PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\
 
 export EDITOR=vim
 
-RED="\[\033[0;31m\]"
-YELLOW="\[\033[1;33m\]"
-GREEN="\[\033[1;32m\]"
-BLUE="\[\033[1;34m\]"
-CYAN="\[\033[1;36m\]"
-LIGHT_GREEN="\[\033[1;32m\]"
-WHITE="\[\033[1;37m\]"
-LIGHT_GRAY="\[\033[0;37m\]"
-COLOR_NONE="\[\e[0m\]"
+export DOTFILES_RED="\[\033[0;31m\]"
+export DOTFILES_YELLOW="\[\033[1;33m\]"
+export DOTFILES_GREEN="\[\033[1;32m\]"
+export DOTFILES_BLUE="\[\033[1;34m\]"
+export DOTFILES_CYAN="\[\033[1;36m\]"
+export DOTFILES_LIGHT_GREEN="\[\033[1;32m\]"
+export DOTFILES_WHITE="\[\033[1;37m\]"
+export DOTFILES_LIGHT_GRAY="\[\033[0;37m\]"
+export DOTFILES_COLOR_NONE="\[\e[0m\]"
 
 function dotfiles_set_exit_code()
 {
     EXIT_CODE=""
     if [[ $RETVAL != 0 ]]
     then
-        EXIT_CODE="${RED}Err(${RETVAL}) ${COLOR_NONE}"
+        EXIT_CODE="${DOTFILES_RED}Err(${RETVAL}) ${DOTFILES_COLOR_NONE}"
     fi
 }
+export -f dotfiles_set_exit_code
 
 function dotfiles_set_virtualenv()
 {
     if [[ -n "$VIRTUAL_ENV_PROMPT" ]]
     then
-        PYTHON_VIRTUALENV="${BLUE}$VIRTUAL_ENV_PROMPT${COLOR_NONE}"
+        PYTHON_VIRTUALENV="${DOTFILES_BLUE}$VIRTUAL_ENV_PROMPT${DOTFILES_COLOR_NONE}"
     elif [[ -n "$VIRTUAL_ENV" ]]
     then
         case "$VIRTUAL_ENV" in
         *venv)
-            PYTHON_VIRTUALENV="${BLUE}[$(basename -- "$(dirname -- "$VIRTUAL_ENV")")]${COLOR_NONE}"
+            PYTHON_VIRTUALENV="${DOTFILES_BLUE}[$(basename -- "$(dirname -- "$VIRTUAL_ENV")")]${DOTFILES_COLOR_NONE}"
             ;;
         *)
-            PYTHON_VIRTUALENV="${BLUE}[$(basename "$VIRTUAL_ENV")]${COLOR_NONE}"
+            PYTHON_VIRTUALENV="${DOTFILES_BLUE}[$(basename "$VIRTUAL_ENV")]${DOTFILES_COLOR_NONE}"
             ;;
         esac
     else
         PYTHON_VIRTUALENV=""
     fi
 }
+export -f dotfiles_set_virtualenv
 
 function dotfiles_set_bash_prompt()
 {
     RETVAL=$?
 
     history -a
+
     dotfiles_set_exit_code
     dotfiles_set_virtualenv
 
@@ -93,8 +96,10 @@ function dotfiles_set_bash_prompt()
         git_branch=" ($git_branch${remote_git_branch:+->}${remote_git_branch})"
     fi
 
-    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${CYAN}\u${COLOR_NONE}@${GREEN}\h${COLOR_NONE}:\w${git_branch}\n${YELLOW}\\\$ ${COLOR_NONE}"
+    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${DOTFILES_CYAN}\u${DOTFILES_COLOR_NONE}@${DOTFILES_GREEN}\h${DOTFILES_COLOR_NONE}:\w${git_branch}\n${DOTFILES_YELLOW}\\\$ ${DOTFILES_COLOR_NONE}"
 }
+
+export -f dotfiles_set_bash_prompt
 export PROMPT_COMMAND=dotfiles_set_bash_prompt
 
 function fzf_history_search()
