@@ -82,28 +82,6 @@ function dotfiles_set_virtualenv()
 }
 export -f dotfiles_set_virtualenv
 
-function dotfiles_set_bash_prompt()
-{
-    RETVAL=$?
-
-    history -a
-
-    dotfiles_set_exit_code
-    dotfiles_set_virtualenv
-
-    local git_branch=$(git rev-parse --abbrev-ref @ 2>/dev/null)
-    local remote_git_branch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
-    if [[ -n "$git_branch" ]]
-    then
-        git_branch=" ($git_branch${remote_git_branch:+->}${remote_git_branch})"
-    fi
-
-    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${DOTFILES_CYAN}\u${DOTFILES_COLOR_NONE}@${DOTFILES_GREEN}\h${DOTFILES_COLOR_NONE}:\w${git_branch}\n${DOTFILES_YELLOW}\\\$ ${DOTFILES_COLOR_NONE}"
-}
-
-export -f dotfiles_set_bash_prompt
-export PROMPT_COMMAND=dotfiles_set_bash_prompt
-
 function fzf_history_search()
 {
     local selected_command
@@ -189,8 +167,36 @@ function dotfiles_bu_activate()
     then
         BU_MODULE_PATH+=:$DOTFILES_DIRNAME/dotfiles_bu_module.sh
     fi
+    # shellcheck source=../shell-utils/bu_entrypoint.sh
     source ~/Documents/shell-utils/bu_entrypoint.sh
 }
+
+function dotfiles_set_bash_prompt()
+{
+    RETVAL=$?
+
+    history -a
+
+    dotfiles_set_exit_code
+    dotfiles_set_virtualenv
+
+    local git_branch=$(git rev-parse --abbrev-ref @ 2>/dev/null)
+    local remote_git_branch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
+    local username_color=${BU_TPUT_VSCODE_BLUE:-$DOTFILES_CYAN}
+    local host_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
+    local cwd_color=${BU_TPUT_VSCODE_ORANGE}
+    local git_branch_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
+    local prompt_color=${BU_TPUT_VSCODE_YELLOW:-$DOTFILES_YELLOW}
+    if [[ -n "$git_branch" ]]
+    then
+        git_branch=" (${git_branch_color}$git_branch${DOTFILES_COLOR_NONE}${remote_git_branch:+->}${BU_TPUT_VSCODE_DARK_GREEN}${remote_git_branch}${DOTFILES_COLOR_NONE})"
+    fi
+
+    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${username_color}\u${DOTFILES_COLOR_NONE}@${host_color}\h${DOTFILES_COLOR_NONE}:${cwd_color}\w${DOTFILES_COLOR_NONE}${git_branch}\n${prompt_color}\\\$ ${DOTFILES_COLOR_NONE}"
+}
+
+export -f dotfiles_set_bash_prompt
+export PROMPT_COMMAND=dotfiles_set_bash_prompt
 
 cd "$HOME"
 dotfiles_bu_activate
