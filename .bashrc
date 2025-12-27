@@ -187,12 +187,13 @@ function dotfiles_set_bash_prompt()
     local cwd_color=${BU_TPUT_VSCODE_ORANGE}
     local git_branch_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
     local prompt_color=${BU_TPUT_VSCODE_YELLOW:-$DOTFILES_YELLOW}
+    local reset=${BU_TPUT_RESET:-$DOTFILES_COLOR_NONE}
     if [[ -n "$git_branch" ]]
     then
-        git_branch=" (${git_branch_color}$git_branch${DOTFILES_COLOR_NONE}${remote_git_branch:+->}${BU_TPUT_VSCODE_DARK_GREEN}${remote_git_branch}${DOTFILES_COLOR_NONE})"
+        git_branch=" (${git_branch_color}$git_branch${reset}${remote_git_branch:+->}${BU_TPUT_VSCODE_DARK_GREEN}${remote_git_branch}${reset})"
     fi
 
-    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${username_color}\u${DOTFILES_COLOR_NONE}@${host_color}\h${DOTFILES_COLOR_NONE}:${cwd_color}\w${DOTFILES_COLOR_NONE}${git_branch}\n${prompt_color}\\\$ ${DOTFILES_COLOR_NONE}"
+    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${username_color}\u${reset}@${host_color}\h${reset}:${cwd_color}\w${reset}${git_branch}\n${prompt_color}\\\$ ${reset}"
 }
 
 export -f dotfiles_set_bash_prompt
