@@ -157,9 +157,9 @@ function dotfiles_autocomplete_completion_func_code()
 
 function dotfiles_bu_activate()
 {
-    if [[ ! -e ~/Documents/shell-utils ]]
+    if [[ ! -e ~/Documents/bash-utils ]]
     then
-        echo shell-utils not found >&2
+        echo bash-utils not found >&2
         return 1
     fi
     
@@ -167,8 +167,8 @@ function dotfiles_bu_activate()
     then
         BU_MODULE_PATH+=:$DOTFILES_DIRNAME/dotfiles_bu_module.sh
     fi
-    # shellcheck source=../shell-utils/bu_entrypoint.sh
-    source ~/Documents/shell-utils/bu_entrypoint.sh
+    # shellcheck source=../bash-utils/bu_entrypoint.sh
+    source ~/Documents/bash-utils/bu_entrypoint.sh
 }
 
 function dotfiles_set_bash_prompt()
