@@ -184,11 +184,11 @@ function dotfiles_set_bash_prompt()
     local remote_git_branch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
     local username_color=${BU_TPUT_VSCODE_BLUE:-$DOTFILES_CYAN}
     local host_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
-    local cwd_color=${BU_TPUT_VSCODE_ORANGE}
+    local cwd_color=${BU_TPUT_VSCODE_ORANGE:-$DOTFILES_CYAN}
     local git_branch_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
     local remote_git_branch_color=${BU_TPUT_VSCODE_DARK_GREEN:-$DOTFILES_GREEN}
-    local prompt_color=${BU_TPUT_VSCODE_YELLOW:-DOTFILES_YELLOW}
-    local reset=${BU_TPUT_RESET:-DOTFILES_COLOR_NONE}
+    local prompt_color=${BU_TPUT_VSCODE_YELLOW:-$DOTFILES_YELLOW}
+    local reset=${BU_TPUT_RESET:-$DOTFILES_COLOR_NONE}
     if [[ -n "$git_branch" ]]
     then
         git_branch=" (\[${git_branch_color}\]$git_branch\[${reset}\]${remote_git_branch:+->}\[${remote_git_branch_color}\]${remote_git_branch}\[${reset}\])"
