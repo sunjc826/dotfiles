@@ -196,7 +196,14 @@ function dotfiles_set_bash_prompt()
 }
 
 export -f dotfiles_set_bash_prompt
-export PROMPT_COMMAND=dotfiles_set_bash_prompt
+export PROMPT_COMMAND=
+
+if [[ ! -e "$HOME"/.lscolors.sh ]]
+then
+    sort "$DOTFILES_DIRNAME"/deps/LS_COLORS/LS_COLORS | dircolors --bourne-shell - > "$HOME"/lscolors.sh
+fi
+
+source "$HOME"/lscolors.sh
 
 cd "$HOME"
 dotfiles_bu_activate
