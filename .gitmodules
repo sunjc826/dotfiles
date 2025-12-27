@@ -1,3 +1,6 @@
 [submodule "deps/LS_COLORS"]
 	path = deps/LS_COLORS
 	url = git@github.com:trapd00r/LS_COLORS.git
+[submodule "deps/bash-utils"]
+	path = deps/bash-utils
+	url = git@github.com:sunjc826/bash-utils.git
