@@ -41,22 +41,22 @@ PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\
 
 export EDITOR=vim
 
-export DOTFILES_RED="\[\033[0;31m\]"
-export DOTFILES_YELLOW="\[\033[1;33m\]"
-export DOTFILES_GREEN="\[\033[1;32m\]"
-export DOTFILES_BLUE="\[\033[1;34m\]"
-export DOTFILES_CYAN="\[\033[1;36m\]"
-export DOTFILES_LIGHT_GREEN="\[\033[1;32m\]"
-export DOTFILES_WHITE="\[\033[1;37m\]"
-export DOTFILES_LIGHT_GRAY="\[\033[0;37m\]"
-export DOTFILES_COLOR_NONE="\[\e[0m\]"
+export DOTFILES_RED="\033[0;31m"
+export DOTFILES_YELLOW="\033[1;33m"
+export DOTFILES_GREEN="\033[1;32m"
+export DOTFILES_BLUE="\033[1;34m"
+export DOTFILES_CYAN="\033[1;36m"
+export DOTFILES_LIGHT_GREEN="\033[1;32m"
+export DOTFILES_WHITE="\033[1;37m"
+export DOTFILES_LIGHT_GRAY="\033[0;37m"
+export DOTFILES_COLOR_NONE="\e[0m"
 
 function dotfiles_set_exit_code()
 {
-    EXIT_CODE=""
-    if [[ $RETVAL != 0 ]]
+    DOTFILES_EXIT_CODE=""
+    if [[ $DOTFILES_RETVAL != 0 ]]
     then
-        EXIT_CODE="${DOTFILES_RED}Err(${RETVAL}) ${DOTFILES_COLOR_NONE}"
+        DOTFILES_EXIT_CODE="\[${DOTFILES_RED}\]Err(${DOTFILES_RETVAL}) \[${DOTFILES_COLOR_NONE}\]"
     fi
 }
 export -f dotfiles_set_exit_code
@@ -65,15 +65,15 @@ function dotfiles_set_virtualenv()
 {
     if [[ -n "$VIRTUAL_ENV_PROMPT" ]]
     then
-        PYTHON_VIRTUALENV="${DOTFILES_BLUE}$VIRTUAL_ENV_PROMPT${DOTFILES_COLOR_NONE}"
+        PYTHON_VIRTUALENV="\[${DOTFILES_BLUE}\]$VIRTUAL_ENV_PROMPT\[${DOTFILES_COLOR_NONE}\]"
     elif [[ -n "$VIRTUAL_ENV" ]]
     then
         case "$VIRTUAL_ENV" in
         *venv)
-            PYTHON_VIRTUALENV="${DOTFILES_BLUE}[$(basename -- "$(dirname -- "$VIRTUAL_ENV")")]${DOTFILES_COLOR_NONE}"
+            PYTHON_VIRTUALENV="\[${DOTFILES_BLUE}\][$(basename -- "$(dirname -- "$VIRTUAL_ENV")")]\[${DOTFILES_COLOR_NONE}\]"
             ;;
         *)
-            PYTHON_VIRTUALENV="${DOTFILES_BLUE}[$(basename "$VIRTUAL_ENV")]${DOTFILES_COLOR_NONE}"
+            PYTHON_VIRTUALENV="\[${DOTFILES_BLUE}\][$(basename "$VIRTUAL_ENV")]\[${DOTFILES_COLOR_NONE}\]"
             ;;
         esac
     else
@@ -173,7 +173,7 @@ function dotfiles_bu_activate()
 
 function dotfiles_set_bash_prompt()
 {
-    RETVAL=$?
+    DOTFILES_RETVAL=$?
 
     history -a
 
@@ -186,20 +186,15 @@ function dotfiles_set_bash_prompt()
     local host_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
     local cwd_color=${BU_TPUT_VSCODE_ORANGE}
     local git_branch_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
-
-    # Note: Some things will break (no idea why) for the following combinations:
-    # 1. setting prompt_color to a color >= 8 and setting reset to DOTFILES_COLOR_NONE
-    #    copy and pasting will mess up
-    # 2. setting prompt_color to a color >= 8 and setting reset to BU_TPUT_RESET (i.e. tput sgr0)
-    #    pressing the up key (history) will break for commands with a slash in them
-    local prompt_color=${DOTFILES_YELLOW}
-    local reset=${DOTFILES_COLOR_NONE}
+    local remote_git_branch_color=${BU_TPUT_VSCODE_DARK_GREEN:-$DOTFILES_GREEN}
+    local prompt_color=${BU_TPUT_VSCODE_YELLOW:-DOTFILES_YELLOW}
+    local reset=${BU_TPUT_RESET:-DOTFILES_COLOR_NONE}
     if [[ -n "$git_branch" ]]
     then
-        git_branch=" (${git_branch_color}$git_branch${reset}${remote_git_branch:+->}${BU_TPUT_VSCODE_DARK_GREEN}${remote_git_branch}${reset})"
+        git_branch=" (\[${git_branch_color}\]$git_branch\[${reset}\]${remote_git_branch:+->}\[${remote_git_branch_color}\]${remote_git_branch}\[${reset}\])"
     fi
 
-    PS1="${EXIT_CODE}${PYTHON_VIRTUALENV}${username_color}\u${reset}@${host_color}\h${reset}:${cwd_color}\w${reset}${git_branch}\n${prompt_color}\\\$ ${reset}"
+    PS1="${DOTFILES_EXIT_CODE}${PYTHON_VIRTUALENV}\[${username_color}\]\u\[${reset}\]@\[${host_color}\]\h\[${reset}\]:\[${cwd_color}\]\w\[${reset}\]${git_branch}\n\[${prompt_color}\]\\\$ \[${reset}\]"
 }
 
 export -f dotfiles_set_bash_prompt
