@@ -196,7 +196,12 @@ function dotfiles_set_bash_prompt()
 }
 
 export -f dotfiles_set_bash_prompt
-export PROMPT_COMMAND=
+export PROMPT_COMMAND=dotfiles_set_bash_prompt
+
+if [[ ! -e "$HOME"/deps/LS_COLORS ]]
+then
+    git submodule update --init
+fi
 
 if [[ ! -e "$HOME"/.lscolors.sh ]]
 then
