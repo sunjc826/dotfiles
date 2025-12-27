@@ -186,8 +186,14 @@ function dotfiles_set_bash_prompt()
     local host_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
     local cwd_color=${BU_TPUT_VSCODE_ORANGE}
     local git_branch_color=${BU_TPUT_VSCODE_GREEN:-$DOTFILES_GREEN}
-    local prompt_color=${BU_TPUT_VSCODE_YELLOW:-$DOTFILES_YELLOW}
-    local reset=${BU_TPUT_RESET:-$DOTFILES_COLOR_NONE}
+
+    # Note: Some things will break (no idea why) for the following combinations:
+    # 1. setting prompt_color to a color >= 8 and setting reset to DOTFILES_COLOR_NONE
+    #    copy and pasting will mess up
+    # 2. setting prompt_color to a color >= 8 and setting reset to BU_TPUT_RESET (i.e. tput sgr0)
+    #    pressing the up key (history) will break for commands with a slash in them
+    local prompt_color=${DOTFILES_YELLOW}
+    local reset=${DOTFILES_COLOR_NONE}
     if [[ -n "$git_branch" ]]
     then
         git_branch=" (${git_branch_color}$git_branch${reset}${remote_git_branch:+->}${BU_TPUT_VSCODE_DARK_GREEN}${remote_git_branch}${reset})"
@@ -199,9 +205,9 @@ function dotfiles_set_bash_prompt()
 export -f dotfiles_set_bash_prompt
 export PROMPT_COMMAND=dotfiles_set_bash_prompt
 
-if [[ ! -e "$HOME"/deps/LS_COLORS ]]
+if [[ ! -e "$DOTFILES_DIRNAME"/deps/LS_COLORS ]]
 then
-    git submodule update --init
+    git -C "$DOTFILES_DIRNAME" submodule update --init
 fi
 
 if [[ ! -e "$HOME"/.lscolors.sh ]]
