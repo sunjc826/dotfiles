@@ -213,4 +213,5 @@ fi
 source "$HOME"/lscolors.sh
 
 cd "$HOME"
-dotfiles_bu_activate
+# Tbh this is a bit overkill, also it disrupts the other environments a bit
+# dotfiles_bu_activate
