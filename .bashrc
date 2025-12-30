@@ -108,7 +108,7 @@ fi
 
 function dotfiles_bind_tmux_on_off()
 {
-    if bu_env_is_in_tmux
+    if [[ -n "$TMUX" && ("$TERM" == screen* || "$TERM" == tmux*) ]]
     then
         if [[ "$(tmux display-message -p '#{session_name}')" = mysession ]]
         then
@@ -215,3 +215,7 @@ source "$HOME"/lscolors.sh
 cd "$HOME"
 # Tbh this is a bit overkill, also it disrupts the other environments a bit
 # dotfiles_bu_activate
+
+
+complete -F dotfiles_autocomplete_completion_func_code code
+bind -x '"\et": "dotfiles_bind_tmux_on_off"'
