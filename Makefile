@@ -4,7 +4,7 @@ SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc  bin/bear_cc .cla
 
 ifneq ($(shell cat /proc/version | grep Microsoft),)
     $(info WSL1 detected)
-    SYMLINK_FILES += bin/node
+    SYMLINK_FILES += bin/node bin/claude bin/install_node_claude
 endif
 
 FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+cd "$HOME"
+if [[ -e Documents/claude-install ]]
+then
+    echo "claude-install already exists, remove it to reinstall"
+    exit 1
+fi
+mkdir -p Documents/claude-install
+cd Documents/claude-install
+npm init
+npm install @anthropic-ai/claude-code

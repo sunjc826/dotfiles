@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+if [[ ! -e "$HOME"/Documents/claude-install ]]
+then
+    echo "claude is not installed, installing"
+    install_node_claude
+fi
+DOTFILES_CLAUDE="$HOME"/Documents/claude-install/node_modules/.bin/claude
+if [[ ! -e "$DOTFILES_CLAUDE" ]]
+then
+    echo "Cannot find claude at $DOTFILES_CLAUDE"
+    exit 1
+fi
+
+exec "$DOTFILES_CLAUDE" "$@"
