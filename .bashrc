@@ -1,16 +1,33 @@
 DOTFILES_DIRNAME=$(realpath -- "$(dirname "${BASH_SOURCE}")")
 
 # https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
-append_path() {
+dotfiles_append_path() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
         PATH="${PATH:+"$PATH:"}$1"
     fi
 }
 
-prepend_path() {
+dotfiles_prepend_path() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
         PATH="$1${PATH:+":$PATH"}"
     fi
+}
+
+__dotfiles_remove_path() {
+    local -n __path_var=$1
+    local path_to_remove=$2
+    if [[ "$__path_var" = "$path_to_remove" ]]
+    then
+    __path_var=
+    else
+    __path_var=${__path_var//:$path_to_remove:/:} # delete instances in the middle
+    __path_var=${__path_var#$path_to_remove:} # delete instance at the beginning
+    __path_var=${__path_var%:$path_to_remove} # delete instance at the end
+    fi
+}
+
+dotfiles_remove_path() {
+    __dotfiles_remove_path PATH "$1"
 }
 
 # Useful 'stronger' sudo 
@@ -32,8 +49,8 @@ export LESSOPEN='|~/.lessfilter %s'
 # check for completions for shopt using `compgen -A shopt`
 shopt -s globstar
 
-prepend_path "$HOME"/bin
-prepend_path .
+dotfiles_prepend_path "$HOME"/bin
+dotfiles_prepend_path .
 
 PS0='\[\e[2 q\]' # reset cursor (we need this or it would mess up program cursors especially vim)
 PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
@@ -219,3 +236,35 @@ cd "$HOME"
 
 complete -F dotfiles_autocomplete_completion_func_code code
 bind -x '"\et": "dotfiles_bind_tmux_on_off"'
+
+
+DOTFILES_ENV_IS_WSL=
+read -r < /proc/version
+if [[ "$REPLY" = *Microsoft* ]]
+then
+    DOTFILES_ENV_IS_WSL=true
+else
+    DOTFILES_ENV_IS_WSL=false
+fi
+
+if "$DOTFILES_ENV_IS_WSL"
+then
+export UV_CONCURRENT_DOWNLOADS=1
+export UV_CONCURRENT_BUILDS=1
+export UV_CONCURRENT_INSTALLS=1
+fi
+
+# Example usage:
+# To diagnose why claude is crashing on WSL1 
+# sudo strace -p $(dotfiles_poll_until_process_exists claude)
+dotfiles_poll_until_process_exists()
+{
+    local proc_pattern=$1
+    local pids=()
+    while ! pids=($(pgrep -f "$proc_pattern")); do
+        : # poll fast
+    done
+    echo "${pids[0]}"
+}
+
+

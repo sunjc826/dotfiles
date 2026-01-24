@@ -1,6 +1,12 @@
 SHELL := /bin/bash
 SCRIPT_FILES := .bashrc .lessfilter
-SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc bin/bear_cc .clangd
+SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc  bin/bear_cc .clangd
+
+ifneq ($(shell cat /proc/version | grep Microsoft),)
+    $(info WSL1 detected)
+    SYMLINK_FILES += bin/node
+endif
+
 FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc
 # Files on a remote machine; ssh config should be unnecessary 
 REMOTE_FILES := $(filter-out .config/Code/User/settings.json .ssh/config,$(FILES))
