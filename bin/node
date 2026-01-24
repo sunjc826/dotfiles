@@ -21,4 +21,23 @@ DOTFILES_REAL_NODE=$(
     dotfiles_remove_path "/home/$USER/bin"
     command which node
 )
-"$(ldd "$DOTFILES_REAL_NODE" | grep ld-linux-x86-64.so.2 | awk '{print $1}')" "$DOTFILES_REAL_NODE" "$@"
+export DOTFILES_REAL_NODE
+
+DOTFILES_SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+DOTFILES_EXECPATH_FIX="$DOTFILES_SCRIPT_DIR/node-execpath-fix.js"
+export DOTFILES_NODE_WRAPPER="$DOTFILES_SCRIPT_DIR/node"
+
+# Add preload script via NODE_OPTIONS so it propagates to child processes correctly
+# Use --require (long form) because Next.js reformats -r incorrectly
+if [[ -z "$NODE_OPTIONS" ]]; then
+    export NODE_OPTIONS="--require=$DOTFILES_EXECPATH_FIX"
+elif [[ "$NODE_OPTIONS" != *"$DOTFILES_EXECPATH_FIX"* ]]; then
+    export NODE_OPTIONS="$NODE_OPTIONS --require=$DOTFILES_EXECPATH_FIX"
+fi
+
+# echo "$DOTFILES_REAL_NODE" >&2
+DOTFILES_NODE_COMMAND=(
+    "$(ldd "$DOTFILES_REAL_NODE" | grep ld-linux-x86-64.so.2 | awk '{print $1}')" --argv0 "$DOTFILES_REAL_NODE" "$DOTFILES_REAL_NODE" "$@"
+)
+echo "${DOTFILES_NODE_COMMAND[@]}" >&2
+exec "${DOTFILES_NODE_COMMAND[@]}"
