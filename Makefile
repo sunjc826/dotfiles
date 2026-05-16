@@ -11,6 +11,7 @@ FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.co
 # Files on a remote machine; ssh config should be unnecessary 
 REMOTE_FILES := $(filter-out .config/Code/User/settings.json .ssh/config,$(FILES))
 WSL_FILES := $(filter-out .config/Code/User/settings.json,$(FILES))
+ZO_FILES := $(REMOTE_FILES)
 FILE_FLAGS := $(patsubst %,%_install_flag,$(FILES))
 
 nothing:
@@ -29,6 +30,9 @@ install_wsl: $(patsubst %,%_install_flag,$(WSL_FILES)) run_once_flag
 
 .PHONY: install_remote
 install_remote: $(patsubst %,%_install_flag,$(REMOTE_FILES)) run_once_flag
+
+.PHONY: install_zo
+install_zo: $(patsubst %,%_install_flag,$(ZO_FILES)) run_once_flag
 
 run_once_flag: | run_once.sh
 	./run_once.sh

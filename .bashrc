@@ -254,6 +254,21 @@ export UV_CONCURRENT_BUILDS=1
 export UV_CONCURRENT_INSTALLS=1
 fi
 
+DOTFILES_ENV_IS_ZO=false
+if [[ -d /__modal ]]
+then
+    DOTFILES_ENV_IS_ZO=true
+fi
+
+if "$DOTFILES_ENV_IS_ZO"
+then
+    export ZO_WORKSPACE=/home/workspace
+    dotfiles_prepend_path "$ZO_WORKSPACE/bin"
+    export HISTFILE="$ZO_WORKSPACE/.bash_history"
+    alias workspace='cd "$ZO_WORKSPACE"'
+    alias shm='cd /dev/shm'
+fi
+
 # Example usage:
 # To diagnose why claude is crashing on WSL1 
 # sudo strace -p $(dotfiles_poll_until_process_exists claude)
