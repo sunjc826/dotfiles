@@ -255,7 +255,7 @@ export UV_CONCURRENT_INSTALLS=1
 fi
 
 DOTFILES_ENV_IS_ZO=false
-if [[ -d /__modal ]]
+if [[ -n "$ZO_USER" || -d /etc/zo ]]
 then
     DOTFILES_ENV_IS_ZO=true
 fi
