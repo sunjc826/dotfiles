@@ -3,7 +3,8 @@ SCRIPT_FILES := .bashrc .lessfilter
 SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc  bin/bear_cc .clangd
 SYMLINK_FILES += .claude/skills/commit .claude/skills/supply-chain
 
-ifneq ($(shell cat /proc/version | grep Microsoft),)
+# WSL1 kernel releases end in "-Microsoft"
+ifneq ($(shell uname -r | grep Microsoft),)
     $(info WSL1 detected)
     SYMLINK_FILES += bin/node bin/claude bin/install_node_claude
 endif

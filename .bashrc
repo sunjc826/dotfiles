@@ -243,8 +243,8 @@ bind -x '"\et": "dotfiles_bind_tmux_on_off"'
 
 
 DOTFILES_ENV_IS_WSL=
-read -r < /proc/version
-if [[ "$REPLY" = *Microsoft* ]]
+# WSL1 kernel releases end in "-Microsoft"; /proc/version doesn't exist on macOS
+if [[ "$(uname -r)" = *Microsoft* ]]
 then
     DOTFILES_ENV_IS_WSL=true
 else
