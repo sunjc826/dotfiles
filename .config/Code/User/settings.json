@@ -98,4 +98,11 @@
   "explorer.confirmDelete": true,
   "python.analysis.inlayHints.callArgumentNames": "all",
   "python.analysis.inlayHints.functionReturnTypes": true,
+  "terminal.integrated.profiles.osx": {
+    "bash (Homebrew)": {
+      "path": "/opt/homebrew/bin/bash",
+      "args": ["-l"]
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "bash (Homebrew)",
 }

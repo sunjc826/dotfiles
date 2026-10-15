@@ -1,0 +1,11 @@
+{
+  "Profiles": [
+    {
+      "Name": "bash (Homebrew)",
+      "Guid": "FA13BC71-5768-44D0-A8E9-387A4B663706",
+      "Dynamic Profile Parent Name": "Default",
+      "Custom Command": "Yes",
+      "Command": "/opt/homebrew/bin/bash -l"
+    }
+  ]
+}
