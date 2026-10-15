@@ -217,17 +217,21 @@ function dotfiles_set_bash_prompt()
 export -f dotfiles_set_bash_prompt
 export PROMPT_COMMAND=dotfiles_set_bash_prompt
 
-if [[ ! -e "$DOTFILES_DIRNAME"/deps/LS_COLORS ]]
+# Submodule dirs exist (empty) in a fresh clone, so check for the file itself
+if [[ ! -e "$DOTFILES_DIRNAME"/deps/LS_COLORS/LS_COLORS ]]
 then
     git -C "$DOTFILES_DIRNAME" submodule update --init
 fi
 
-if [[ ! -e "$HOME"/.lscolors.sh ]]
+if [[ ! -e "$HOME"/.lscolors.sh ]] && command -v dircolors &>/dev/null && [[ -e "$DOTFILES_DIRNAME"/deps/LS_COLORS/LS_COLORS ]]
 then
-    sort "$DOTFILES_DIRNAME"/deps/LS_COLORS/LS_COLORS | dircolors --bourne-shell - > "$HOME"/lscolors.sh
+    sort "$DOTFILES_DIRNAME"/deps/LS_COLORS/LS_COLORS | dircolors --bourne-shell - > "$HOME"/.lscolors.sh
 fi
 
-source "$HOME"/lscolors.sh
+if [[ -e "$HOME"/.lscolors.sh ]]
+then
+    source "$HOME"/.lscolors.sh
+fi
 
 cd "$HOME"
 # Tbh this is a bit overkill, also it disrupts the other environments a bit
