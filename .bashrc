@@ -30,6 +30,43 @@ dotfiles_remove_path() {
     __dotfiles_remove_path PATH "$1"
 }
 
+DOTFILES_ENV_IS_MACOS=false
+if [[ "$OSTYPE" == darwin* ]]
+then
+    DOTFILES_ENV_IS_MACOS=true
+fi
+
+if "$DOTFILES_ENV_IS_MACOS"
+then
+    # Terminals launched from the Dock don't inherit Homebrew's PATH
+    dotfiles_prepend_path /opt/homebrew/sbin
+    dotfiles_prepend_path /opt/homebrew/bin
+    # The login shell stays zsh, so point programs that spawn $SHELL (tmux, vim, claude) at this bash
+    export SHELL=$BASH
+
+    # Prefer GNU coreutils from Homebrew (g-prefixed) over the BSD versions
+    if ! command -v tac &>/dev/null
+    then
+        if command -v gtac &>/dev/null
+        then
+            tac() { gtac "$@"; }
+        else
+            tac() { tail -r "$@"; }
+        fi
+    fi
+    if ! command -v dircolors &>/dev/null && command -v gdircolors &>/dev/null
+    then
+        dircolors() { gdircolors "$@"; }
+    fi
+    if command -v gls &>/dev/null
+    then
+        alias ls='gls --color=auto'
+    else
+        # BSD ls ignores LS_COLORS
+        export CLICOLOR=1
+    fi
+fi
+
 # Useful 'stronger' sudo 
 psudo() {
     sudo -E LD_LIBRARY_PATH="$LD_LIBRARY_PATH" "$@"
