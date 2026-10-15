@@ -7,7 +7,7 @@ ifneq ($(shell cat /proc/version | grep Microsoft),)
     SYMLINK_FILES += bin/node bin/claude bin/install_node_claude
 endif
 
-FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc
+FILES := $(SCRIPT_FILES) $(SYMLINK_FILES) .gdbinit .inputrc .ssh/config .tmux.conf .vimrc .config/pnpm/config.yaml
 # Files on a remote machine; ssh config should be unnecessary 
 REMOTE_FILES := $(filter-out .config/Code/User/settings.json .ssh/config,$(FILES))
 WSL_FILES := $(filter-out .config/Code/User/settings.json,$(FILES))
@@ -59,4 +59,8 @@ $(patsubst %,%_install_flag,$(SYMLINK_FILES)):
 	touch $@
 .vimrc_install_flag:
 	. install.sh && append_source_file so '$|'
+	touch $@
+# pnpm reads its global config from ~/Library/Preferences on macOS
+.config/pnpm/config.yaml_install_flag:
+	. install.sh && if [[ $$(uname) == Darwin ]]; then symlink_file '$|' Library/Preferences/pnpm/config.yaml; else symlink_file '$|'; fi
 	touch $@
