@@ -7,8 +7,12 @@ dotfiles_append_path() {
     fi
 }
 
+# Moves $1 to the front even when already present: login bash runs
+# /etc/profile's path_helper, which puts /usr/bin:/bin ahead of an inherited
+# /opt/homebrew/bin, so a no-op here leaves /bin/bash (3.2) winning.
 dotfiles_prepend_path() {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    if [ -d "$1" ]; then
+        __dotfiles_remove_path PATH "$1"
         PATH="$1${PATH:+":$PATH"}"
     fi
 }
