@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 SCRIPT_FILES := .bashrc .lessfilter
 SYMLINK_FILES := .config/Code/User/settings.json .shellcheckrc  bin/bear_cc .clangd
+SYMLINK_FILES += .claude/skills/commit .claude/skills/supply-chain
 
 ifneq ($(shell cat /proc/version | grep Microsoft),)
     $(info WSL1 detected)
